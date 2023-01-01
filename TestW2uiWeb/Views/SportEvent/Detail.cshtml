@@ -1,0 +1,365 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .enableupdate {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    #page_detail_event {
+        width: 100%; /* you could actually just change it to 0px */
+        margin: 100px auto;
+    }
+
+    #myModal .modal-dialog {
+        width: 50%;
+        margin: 0 auto;
+        margin-top: 1%;
+        -webkit-box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);
+        -moz-box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);
+        box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);
+    }
+
+    /*#modal_data_organizer .modal-dialog {
+        width: 60%;
+        margin: 0 auto;
+        margin-top: 2%;
+    }
+
+    #modal_data_organizer .control-label {
+        font-size: 12px;
+    }
+
+    .modal-footer {
+        padding-top: 5px;
+        padding-bottom: 25px;
+        border-top-color: #E4E9EE;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        background-color: whitesmoke;
+    }*/
+
+    /*#modal_add {
+        width: 60%;
+        margin: 0 auto;
+        margin-top: 2%;*/
+    /* -webkit-box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);
+        -moz-box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);
+        box-shadow: -1px 11px 48px 3px rgba(0,0,0,0.75);*/
+    /*}*/
+</style>
+
+<div class="page_detail" id="page_detail_event">
+    <form class="form-horizontal">
+        <div class="box-body" id="field">
+
+            <div class="form-group">
+                <label for="inputName" class="col-sm-4 control-label">Event Date</label>
+                <div class="col-sm-4">
+                    <input class="form-control date-picker wajib" id="eventDate" data-date-format="dd-mm-yyyy" type="text" style="height:28px;" placeholder="Event Date" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputName" class="col-sm-4 control-label">Event Type <mandatory>*</mandatory></label>
+                <div class="col-sm-4">
+                    <input class="form-control wajib" id="eventType" placeholder="Event Type" type="text" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputName" class="col-sm-4 control-label">Event Name <mandatory>*</mandatory></label>
+                <div class="col-sm-4">
+                    <input class="form-control wajib" id="eventName" placeholder="Event Name" type="text" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputName" class="col-sm-4 control-label">Organizer : <mandatory>*</mandatory></label>
+                <div class="col-sm-4">
+                    <input class="form-control wajib" id="organizer" onclick="list_organizer()" placeholder="organizer" type="text" autocomplete="off">
+                    <input type="hidden" id="EoID">
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="footer_form">
+
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            @*Modal Body*@
+            <div class="modal-body" style="padding:0px;padding-top:10px;">
+                <div id="catatan">
+                    <table border="0px" width="100%" height="100%">
+                        <tr>
+                            <td width="50%" valign="top">
+                                <div id="gridEO" style="height:297px; border-left: none; border-bottom: 1px solid #dedede; border-radius: 0px; border-top: 0px;" class="responsive"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" id="fid_footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var screen_width = Number(window.innerWidth) * (3 / 4);
+
+    //first load event // DOM
+    $(document).ready(function () {
+        form_Event_detail();
+    });
+
+    function form_Event_detail() {
+        if (flagCrud == "ADD") {
+            set_sub_child_breadcrumb("New");
+            var button_action =
+                '<button type="button" class="btn btn-primary btn-sm" onclick="save_event()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit</button>' +
+                '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()" > Cancel</button > ';
+            $("#page_detail_event .footer_form").html(button_action);
+        }
+        else if (flagCrud == "VIEW") {
+            set_sub_child_breadcrumb("View Detail Event");
+            fill_form_detail();
+            disable_field();
+            var button_action =
+                '<button type = "button" class="btn btn-warning btn-sm" onclick = "allow_update()"><i class="fa fa-pencil" aria-hidden="true"></i>Update</button>   ' +
+                '<button type = "button" class="btn btn-danger btn-sm" onclick = "delete_event()"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>   ' +
+                '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()"> Cancel</button > ';
+            $("#page_detail_event .footer_form").html(button_action);
+        }
+    }
+
+    function fill_form_detail() {
+        $("#eventType").val(isStringNull(current_data.eventType));
+        $("#eventName").val(current_data.eventName);
+        $("#eventDate").val(current_data.eventDate);
+        $("#organizer").val(current_data.organizer.organizerName);
+        $("#EoID").val(current_data.organizer.id);
+    }
+
+    function allow_update() {
+        enable_field();
+        button_action =
+            '<button type="button" class="btn btn-warning btn-sm" onclick="update_event()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit </button>' +
+            '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()" > Cancel</button > ';
+
+        $("#page_detail_event .footer_form").html(button_action);
+    }
+
+    function disable_field() {
+        document.getElementById("eventDate").disabled = true;
+        document.getElementById("eventType").disabled = true;
+        document.getElementById("eventName").disabled = true;
+        document.getElementById("organizer").disabled = true;
+    }
+
+    function enable_field() {
+        document.getElementById("eventDate").disabled = false;
+        document.getElementById("eventType").disabled = false;
+        document.getElementById("eventName").disabled = false;
+        document.getElementById("organizer").disabled = false;
+    }
+
+    function save_event() {
+        var valid = form_validation("page_detail_event", "wajib");
+        if (valid == false) {
+            return;
+        }
+        var DataSave = new FormData();
+        DataSave.append('eventDate', $("#eventDate").val());
+        DataSave.append('eventType', $("#eventType").val());
+        DataSave.append('eventName', $("#eventName").val());
+        DataSave.append('idEo', $("#EoID").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/SportEvent/insert',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Save data success !");
+                $('#Saving_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+
+    function update_event() {
+        var valid = form_validation("page_detail_event", "wajib");
+        if (valid == false) {
+            return;
+        }
+        var DataSave = new FormData();
+        DataSave.append('id', current_data.id);
+        DataSave.append('eventDate', $("#eventDate").val());
+        DataSave.append('eventType', $("#eventType").val());
+        DataSave.append('eventName', $("#eventName").val());
+        DataSave.append('idEo', $("#EoID").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/SportEvent/update',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Update data success !");
+                $('#Saving_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+
+    function delete_event() {
+
+        var DataSave = new FormData();
+        DataSave.append('id', current_data.id);
+
+        $("#Deleting_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/SportEvent/delete',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Deleting_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Deleting_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Delete data success !");
+                $('#Deleting_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+
+    function list_organizer() {
+        $('#myModal').modal('show');
+        $('#myModal').modal(
+            {
+                backdrop: 'static',
+                keyboard: false
+            }
+        );
+        render_EO_List();
+    }
+
+    function render_EO_List() {
+        if (w2ui['gridEO'] != null) {
+
+            w2ui['gridEO'].destroy();
+        }
+
+        var url = '/Organizer/getOrganizerList';
+
+        $('#gridEO').w2grid({
+            name: 'gridEO',
+            url: url,
+            show: {
+                toolbar: true,
+                lineNumbers: true,
+                toolbarReload: true,
+                toolbarSearch: false,
+            },
+            columns: [
+                { field: 'id', caption: 'ID', size: '100px', searchable: 'text' },
+                { field: 'organizerName', caption: 'Organizer Name', size: '120px', searchable: 'text' },
+                { field: 'imageLocation', caption: 'Image Location', size: '200px', searchable: 'text' },
+            ]
+            ,
+            searches: [
+                { type: 'text', field: 'id', label: 'ID' },
+                { type: 'text', field: 'organizerName', label: 'Organizer Name' },
+                { type: 'text', field: 'imageLocation', label: 'Image Location' },
+            ],
+            onDblClick: function (event) {
+                var record = this.get(event.recid);
+                if (record != null) {
+                    $("#organizer").val(record.organizerName);
+                    $("#EoID").val(record.id);
+                    $('#myModal').modal('hide');
+                }
+            },
+            onReload: function (event) {
+
+                w2ui['gridEO'].load(url);
+
+            },
+            onSelect: function (event) {
+                var record = this.get(event.recid);
+            },
+            onUnselect: function (event) {
+
+            },
+            onDelete: function (event) {
+            },
+        });
+
+        w2ui['gridEO'].reload();
+    }
+    
+    $('.date-picker').w2field('date', { format: 'yyyy/mm/dd' });
+</script>

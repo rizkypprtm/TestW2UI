@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Child_Caption = "Home Page";
+    ViewBag.Icon = "<i class=\"ace-icon fa fa-home\"></i>";
+    ViewBag.Title = "HomePage";
+
+    ViewBag.Title = "HomePage";
+
+
+}
+
+
+<style>
+    #box_info_req_update {
+        text-align: center;
+        border: 0px dashed #dedede;
+        margin: 0px auto;
+        margin-top: 10px;
+        width: 85%;
+        font-size: 13px;
+        border-radius: 5px;
+    }
+
+
+    #box_info_req_update_icon {
+        text-align: center;
+        padding: 10px;
+        border: 0px dashed #dedede;
+        margin: 5px auto;
+        margin-top: 1%;
+    }
+
+    .icon_short_cut {
+        border: 1px dashed #dedede;
+        padding: 18px;
+        width: 100px;
+        height: 140px;
+        border-radius: 2%;
+        display: inline-table;
+        margin-left: 3px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: 0.5s;
+        margin-bottom: 1%;
+        background: none;
+    }
+
+        .icon_short_cut:hover {
+            opacity: 0.50;
+            border: 1px solid yellowgreen;
+            background-color: white;
+        }
+
+    .img_langganan {
+        width: 60px;
+    }
+
+    .icon_short_cut i {
+        font-size: 35px;
+    }
+
+    .page-content {
+        padding: 0px;
+    }
+
+
+    .form-group label {
+        font-size: 11px;
+    }
+
+
+    .form-group {
+        margin-bottom: 0px;
+    }
+
+        .form-group .select2 {
+            margin-bottom: 3px;
+            text-align: left;
+        }
+
+        .form-group .form-control:hover {
+            border-bottom: 1px dashed red;
+        }
+
+    .icon_lookup:hover {
+        color: Blue;
+    }
+
+    .icon_lookup {
+        color: yellowgreen;
+    }
+
+    .form-group .form-control {
+        font-size: 12px;
+        border: none;
+        border-bottom: 1px dashed yellowgreen;
+        margin: 0px;
+        margin-bottom: 0px;
+    }
+
+        .form-group .form-control .wajib:hover {
+            border-bottom: 1px dashed blue;
+        }
+
+    .select2-selection__placeholder {
+        font-size: 11px;
+    }
+
+
+    @@media screen and (max-width: 700px) {
+
+        #ModAddCustomer .modal-body, #ModalCustomerDetail .modal-body {
+            height: auto;
+        }
+
+
+
+        #ModAddCustomer .modal-dialog {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+
+        #ModalSales .modal-dialog {
+            margin: 0 auto;
+            margin-top: 0%;
+        }
+    }
+</style>
+
+<div id="PageContainer">
+    <div class="row" id="box_info_req_update">
+
+        <div class="col-sm-3" style="padding-top:2%;">
+        </div>
+        <div class="col-sm-9">
+
+            <div style="text-align:left;font-size:12px;padding-top:15px;">
+                <span style="font-size:20px;">
+                    Hi,.. @Session["email"].ToString() <br />
+                    Selamat datang
+                </span><br /><br /><br />
+                Terima kasih telah menggunakan [App_name]<br />
+                Gunakan fitur-fitur yang telah kami sediakan dibawah ini<br />
+                desc... <br />
+                desc...<br />
+                desc...<br />
+                <span>Salam </span>
+                <span><span style="font-size:18px;color:#e62e00;"><br />[company name] IT Team.</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="box_info_req_update_icon">
+
+    <div class="icon_short_cut" onclick="open_shortcut('User/Index')">
+        <img src="../../../Content/img/employee2.png" class="logo_menu" id="logo_user" style="width:40px;">
+        <br /><br />
+        <span class="lbl bigger-100">User</span>
+    </div>
+
+    <div class="icon_short_cut" onclick="open_shortcut('Organizer/Index')">
+        <img src="../../../Content/img/document_check.png" class="logo_menu" id="logo_user" style="width:40px;">
+        <br /><br />
+        <span class="lbl bigger-100">Organizer</span>
+    </div>
+
+    <div class="icon_short_cut" onclick="open_shortcut('SportEvent/Index')">
+        <img src="../../../Content/img/sport.png" class="logo_menu" id="logo_user" style="width:40px;">
+        <br /><br />
+        <span class="lbl bigger-100">Sport Event</span>
+    </div>
+</div>
+
+

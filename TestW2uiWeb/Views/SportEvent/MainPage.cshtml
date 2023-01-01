@@ -1,0 +1,230 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+
+    .page-content {
+        padding: 0px;
+    }
+
+    .box_info {
+        text-align: center;
+        padding-top: 0.7%;
+        border: 0px dashed #dedede;
+        margin: 0px auto;
+        margin-top: 0%;
+        width: 80%;
+        border-radius: 5px;
+    }
+
+    #box_info_icon {
+        text-align: center;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        border-top: 1px dashed #dedede;
+        margin-top: 10px;
+        box-sizing: border-box;
+    }
+
+        #box_info_icon .icon_short_cut {
+            border: 1px dashed #dedede;
+            padding: 8px;
+            width: 85px;
+            height: 110px;
+            border-radius: 2%;
+            display: inline-table;
+            margin-left: 2px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 1%;
+            background-color: none;
+            cursor: pointer;
+        }
+
+            #box_info_icon .icon_short_cut:hover {
+                opacity: 0.50;
+                border: 1px solid #1a8cff;
+            }
+
+            #box_info_icon .icon_short_cut i {
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+</style>
+
+<div id="page_panel">
+
+    <div class="row box_info" style="background-color:White;">
+
+        <div class="col-sm-3" style="padding-top:4%;">
+            <img src="../../../Content/img/sport.png" class="logo_menu_head" style="width:90%;">
+        </div>
+
+        <div class="col-sm-7">
+
+            <div style="text-align:left;font-size:13px;margin-bottom:30px;">
+                <span style="font-size:60px;color:#1a8cff;font-weight:bold;">S</span><span style="font-size:25px;color:#88a833;">port Event</span><br />
+                <ul style="list-style-type:circle;color:#4d4d00;">
+                    <li>Deskripsi A</li>
+                    <li>Deskripsi B</li>
+                    <li>Deskripsi C</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="box_info_icon">
+
+
+
+        <div class="icon_short_cut" onclick="show_Event_List();" id="List">
+            <i class="fa fa-book" aria-hidden="true" style="color:#8b7979;"></i>
+            <br />
+            <span class="lbl bigger-100">Sport Event List</span> <br /><br />
+        </div>
+
+        <div class="icon_short_cut" onclick="Add_Event();" id="New">
+            <i class="fa fa-plus-square-o" aria-hidden="true" style="color:#8b7979;"></i>
+            <br />
+            <span class="lbl bigger-100">Add Sport Event</span> <br /><br />
+        </div>
+
+    </div>
+
+</div>
+
+<div id="page_result" hidden>
+    <div id="gridEvent" style="border-radius:0px;border:none;border-top:1px solid #ccc;" class="responsive"></div>
+</div>
+
+<script>
+
+    $('#gridEvent').css('height', Number(window.innerHeight) - 133);
+    $(window).resize(function () {
+        $('#gridEvent').css('height', Number(window.innerHeight) - 133);
+    });
+
+    function Add_Event() {
+
+        flagCrud = "ADD";
+        form_Event();
+    }
+
+    function show_Event_List() {
+        $("#page_panel").hide(function () {
+            $("#page_result").show(function () {
+                render_grid_event();
+                refresh_event_list();
+            });
+        });
+    }
+
+    function render_grid_event() {
+
+        if (w2ui['gridEvent'] != null) { w2ui['gridEvent'].destroy(); }
+        call_back = 0;
+
+        $('#gridEvent').w2grid({
+            name: 'gridEvent',
+            textSearch: 'contains',
+            show: {
+                header: false,
+                toolbar: true,
+                footer: true,
+                lineNumbers: false,
+                selectColumn: true,
+                toolbarSearch: false,
+                toolbarAdd: true
+            },
+            toolbar: {
+                items: [
+                    { type: 'break' },
+                    { type: 'button', id: 'view_detail', text: '<i class="fa fa-eye" aria-hidden="true"></i> View Detail', disabled: true },
+                    { type: 'spacer' },
+                    { type: 'button', id: 'close_button', text: '<i class="fa fa-times" aria-hidden="true" style="color:red;"></i> Close' },
+                ],
+                onClick: function (target, data) {
+                    call_back = 1;
+                    switch (target) {
+                        case 'view_detail':
+                            var sel = w2ui.gridEvent.getSelection();
+                            var record = w2ui.gridEvent.get(sel[0]);
+                            current_data = record;
+                            flagCrud = "VIEW";
+                            form_Event();
+                            break;
+                        case 'close_button':
+                            back_main_page();
+                            break;
+                    }
+                }
+            },
+            columns: [
+                { field: 'id', text: 'Id.', size: '50px', sortable: true, searchable: 'text', resizable: true, info: true },
+                { field: 'eventDate', text: 'Event Date', size: '100px', sortable: true, searchable: 'date', resizable: true },
+                { field: 'eventName', text: 'Event Name', size: '200px', sortable: true, searchable: 'text', resizable: true },
+                { field: 'eventType', text: 'Event Type', size: '200px', sortable: true, searchable: 'text', resizable: true },
+                { field: 'organizer.imageLocation', text: 'Image Location', size: '300px', sortable: true, searchable: 'text', resizable: true },
+                { field: 'organizer.organizerName', text: 'Organizer Name', size: '200px', sortable: true, searchable: 'text', resizable: true },
+            ],
+            searches: [
+                { type: 'text', field: 'id', label: 'ID' },
+                { type: 'text', field: 'eventDate', label: 'Event Date' },
+                { type: 'text', field: 'eventName', label: 'Event Name' },
+                { type: 'text', field: 'eventType', label: 'Event Type' },
+                { type: 'text', field: 'organizer.imageLocation', label: 'Image Location' },
+                { type: 'text', field: 'organizer.organizerName', label: 'Organizer Name' },
+            ],
+            onAdd: function (event) {
+                flagCrud = "ADD";
+                form_Event();
+            },
+            onDblClick: function (event) {
+                var record = this.get(event.recid);
+                if (record != null) {
+                    current_data = record;
+                    flagCrud = "VIEW";
+                    form_Event();
+                }
+
+            },
+            onReload: function (event) {
+
+            },
+            onSelect: function (event) {
+                event.onComplete = function () {
+
+                    var data = w2ui.gridEvent.getSelection();
+                    if (data.length == 1) {
+                        var record = this.get(event.recid);
+                        w2ui['gridEvent'].toolbar.enable('view_detail');
+                    }
+                }
+            },
+            onUnselect: function (event) {
+                event.onComplete = function () {
+                    disable_button()
+                }
+            },
+            onRefresh: function (event) {
+
+            },
+        });
+    }
+
+    function disable_button() {
+        w2ui['gridEvent'].toolbar.disable('view_detail');
+    }
+
+    function refresh_event_list() {
+        w2ui['gridEvent'].load(URL + '/SportEvent/getEventList');
+    }
+
+    function form_Event() {
+        load_page("#PageContainer", URL + "/SportEvent/Detail", function () { $('.select2').css('width', '100%').select2(); });
+    }
+
+</script>
+

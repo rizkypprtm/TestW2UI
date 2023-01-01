@@ -1,0 +1,65 @@
+﻿@using System.Data.SqlClient;
+@using System.Data;
+@*@using I_Care.Classes;*@
+
+
+
+
+<div id="sidebar" class="sidebar menu-min responsive">
+
+    <ul class="nav nav-list">
+
+
+
+        <li @{if (ViewBag.Parent == "Home") { <text> class="active open hover" </text>  } else { <text> class="hover" </text>  }}>
+            <a href="@Url.Content("~/Home/Index")" onclick="render_wait()">
+
+                <img src="../../../Content/img/HomeIcon2.png" class="icon_image_side">
+                <span class="menu-text">Home</span>
+            </a>
+
+        </li>
+
+
+
+        <li @{if (ViewBag.Parent == "Home") { <text> class="active open hover" </text>  } else { <text> class="hover" </text>  }}>
+            <a href="@Url.Content("~/User/Index")" onclick="render_wait()">
+
+                <img src="../../../Content/img/employee2.png" class="icon_image_side">
+                <span class="menu-text">User</span>
+            </a>
+        </li>
+
+        <li @{if (ViewBag.Parent == "Home") { <text> class="active open hover" </text>  } else { <text> class="hover" </text>  }}>
+            <a href="@Url.Content("~/Organizer/Index")" onclick="render_wait()">
+
+                <img src="../../../Content/img/document_check.png" class="icon_image_side">
+                <span class="menu-text">Organizer</span>
+            </a>
+        </li>
+
+        <li @{if (ViewBag.Parent == "Home") { <text> class="active open hover" </text>  } else { <text> class="hover" </text>  }}>
+            <a href="@Url.Content("~/SportEvent/Index")" onclick="render_wait()">
+
+                <img src="../../../Content/img/sport.png" class="icon_image_side">
+                <span class="menu-text">Sport Event</span>
+            </a>
+        </li>
+        
+
+        @*<li @{if (ViewBag.Parent == "ChangePassword") { <text> class="active open hover" </text>  } else { <text> class="hover" </text>  }}>
+            <a href="@Url.Content("~/User/ChangePassword")" onclick="render_wait()">
+
+                <img src="../../../Content/img/change_password.png" class="icon_image_side">
+                <span class="menu-text">Change Password</span>
+            </a>
+
+        </li>*@
+
+
+    </ul><!-- /.nav-list -->
+
+
+
+
+</div>

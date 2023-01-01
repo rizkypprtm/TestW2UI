@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Organizer";
+    ViewBag.Parent = "Organizer";
+    ViewBag.Child = "Organizer";
+    ViewBag.Parent_Caption = "<a href='" + @Request.Url.GetLeftPart(UriPartial.Authority) + "/Organizer/Index'>Organizer</a>";
+    //ViewBag.Child_Caption = "<a href='" + @Request.Url.GetLeftPart(UriPartial.Authority) + "/Organizer/Index'>Index</a>";
+    ViewBag.Icon = "<i class=\"ace-icon fa fa-file-text-o\"></i>";
+    ViewBag.TopMenuAce = "Yes";
+
+}
+
+<script>
+    
+    var global_status = 0;
+    var call_back = 0;
+    
+    var height = Number(window.innerHeight) - 133;
+    var StatusSearch = 0;
+    var flagCrud = "";
+    
+</script>
+
+<style>
+    .page-content {
+        padding: 0px;
+    }
+</style>
+
+
+<div id="PageContainer"></div>
+
+
+<script>
+
+    function back_main_page() {
+
+        isMainPage = true;
+        set_sub_child_breadcrumb("");
+        load_page("#PageContainer", URL + "/Organizer/MainPage", function () { $('.select2').css('width', '100%').select2() });
+    }
+    
+    $(document).ready(function () {
+
+        isMainPage = true;
+        load_page("#PageContainer", URL + "/Organizer/MainPage", function () { $('.select2').css('width', '100%').select2() });
+
+    });
+
+</script>

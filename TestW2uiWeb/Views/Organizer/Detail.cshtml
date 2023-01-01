@@ -1,0 +1,211 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .enableupdate {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    #page_detail_organizer {
+        width: 100%; /* you could actually just change it to 0px */
+        margin: 100px auto;
+    }
+</style>
+
+<div class="page_detail" id="page_detail_organizer">
+    <div id="info_organizer" class="tab-pane fade active in">
+        <form class="form-horizontal">
+            <div class="box-body" id="field">
+
+                <div class="form-group">
+                    <label for="inputName" class="col-sm-4 control-label">Organizer Name <mandatory>*</mandatory></label>
+                    <div class="col-sm-4">
+                        <input class="form-control wajib" id="organizerName" placeholder="Organizer Name" type="text" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputName" class="col-sm-4 control-label">Image Location <mandatory>*</mandatory></label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control wajib" id="imageLocation" placeholder="Image Location" type="text" style="color:#333;resize:both;font-size:11px;padding-left:3px;height:70px !important;" autocomplete="off"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="footer_form">
+
+    </div>
+</div>
+
+<script>
+    var screen_width = Number(window.innerWidth) * (3 / 4);
+
+    //first load event // DOM
+    $(document).ready(function () {
+        form_Organizer_detail();
+    });
+
+    function form_Organizer_detail() {
+        if (flagCrud == "ADD") {
+            set_sub_child_breadcrumb("New");
+            var button_action =
+                '<button type="button" class="btn btn-primary btn-sm" onclick="save_organizer()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit</button>' +
+                '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()" > Cancel</button > ';
+            $("#page_detail_organizer .footer_form").html(button_action);
+        }
+        else if (flagCrud == "VIEW") {
+            set_sub_child_breadcrumb("View Detail Organizer");
+            fill_form_detail();
+            disable_field();
+            var button_action =
+                '<button type = "button" class="btn btn-warning btn-sm" onclick = "allow_update()"><i class="fa fa-pencil" aria-hidden="true"></i>Update</button>   ' +
+                '<button type = "button" class="btn btn-danger btn-sm" onclick = "delete_organizer()"><i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>   ' +
+                '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()"> Cancel</button > ';
+            $("#page_detail_organizer .footer_form").html(button_action);
+        }
+    }
+
+    function fill_form_detail() {
+        $("#organizerName").val(isStringNull(current_data.organizerName));
+        $("#imageLocation").val(current_data.imageLocation);
+    }
+
+    function allow_update() {
+        enable_field();
+        button_action =
+            '<button type="button" class="btn btn-warning btn-sm" onclick="update()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit </button>' +
+            '<button type = "button" class="btn btn-default btn-sm" onclick = "back_main_page()" > Cancel</button > ';
+
+        $("#page_detail_organizer .footer_form").html(button_action);
+    }
+
+    function disable_field() {
+        document.getElementById("organizerName").disabled = true;
+        document.getElementById("imageLocation").disabled = true;
+    }
+
+    function enable_field() {
+        document.getElementById("organizerName").disabled = false;
+        document.getElementById("imageLocation").disabled = false;
+    }
+
+    function save_organizer() {
+        var valid = form_validation("info_organizer", "wajib");
+        if (valid == false) {
+            return;
+        }
+
+        var DataSave = new FormData();
+        DataSave.append('organizerName', $("#organizerName").val());
+        DataSave.append('imageLocation', $("#imageLocation").val());
+        
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/Organizer/insert',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Save data success !");
+                $('#Saving_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+
+    function update() {
+        var valid = form_validation("info_organizer", "wajib");
+        if (valid == false) {
+            return;
+        }
+        var DataSave = new FormData();
+        DataSave.append('id', current_data.id);
+        DataSave.append('organizerName', $("#organizerName").val());
+        DataSave.append('imageLocation', $("#imageLocation").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/Organizer/update',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Update data success !");
+                $('#Saving_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+
+    function delete_organizer() {
+        
+        var DataSave = new FormData();
+        DataSave.append('id', current_data.id);
+        
+        $("#Deleting_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/Organizer/delete',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Deleting_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Deleting_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            }
+            else {
+                w2alert("Delete data success !");
+                $('#Deleting_Load').hide();
+                back_main_page();
+            }
+        });
+    }
+</script>

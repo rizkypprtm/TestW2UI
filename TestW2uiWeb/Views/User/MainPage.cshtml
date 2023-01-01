@@ -1,0 +1,429 @@
+﻿@{
+    Layout = null;
+}
+
+
+@*<meta name="viewport" content="width=device-width, initial-scale=1">*@
+
+<style>
+
+    .page-content {
+        padding: 0px;
+    }
+
+    .box_info {
+        text-align: center;
+        padding-top: 0.7%;
+        border: 0px dashed #dedede;
+        margin: 0px auto;
+        margin-top: 0%;
+        width: 80%;
+        border-radius: 5px;
+    }
+
+    #box_info_icon {
+        text-align: center;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        border-top: 1px dashed #dedede;
+        margin-top: 10px;
+        box-sizing: border-box;
+    }
+
+        #box_info_icon .icon_short_cut {
+            border: 1px dashed #dedede;
+            padding: 8px;
+            width: 85px;
+            height: 110px;
+            border-radius: 2%;
+            display: inline-table;
+            margin-left: 2px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 1%;
+            background-color: none;
+            cursor: pointer;
+        }
+
+            #box_info_icon .icon_short_cut:hover {
+                opacity: 0.50;
+                border: 1px solid #1a8cff;
+            }
+
+            #box_info_icon .icon_short_cut i {
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+</style>
+
+<div id="page_panel">
+
+    <div class="row box_info" style="background-color:White;">
+
+        <div class="col-sm-3" style="padding-top:4%;">
+            <img src="../../../Content/img/employee2.png" class="logo_menu_head" style="width:90%;">
+        </div>
+
+        <div class="col-sm-7">
+
+            <div style="text-align:left;font-size:13px;margin-bottom:30px;">
+                <span style="font-size:60px;color:#1a8cff;font-weight:bold;">U</span><span style="font-size:25px;color:#88a833;"> - ser</span><br />
+                <ul style="list-style-type:circle;color:#4d4d00;">
+                    <li>Deskripsi A</li>
+                    <li>Deskripsi B</li>
+                    <li>Deskripsi C</li>
+                </ul>
+                <input type="hidden" id="userId" value=@Session["id"].ToString()>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<div id="box_info_icon">
+
+    <div class="icon_short_cut" onclick="add_user()" id="shortcut_add">
+        <i class="fa fa-plus-square-o" aria-hidden="true" style="color:dodgerblue;"></i>
+        <br />
+        <span class="lbl bigger-100">New User</span> <br /><br />
+    </div>
+
+    <div class="icon_short_cut" onclick="detail_user()" id="detail">
+        <i class="fa fa-search" aria-hidden="true" style="color:#8b7979;"></i>
+        <br />
+        <span class="lbl bigger-100">Detail User</span> <br /><br />
+    </div>
+
+    <div class="icon_short_cut" onclick="Change_Password()" id="chPassword">
+        <img src="../../../Content/img/change_password.png" class="logo_menu" id="logo_database" style="width:40px;">
+        <br /><br />
+        <span class="lbl bigger-100"> Change Password</span>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ModalAddUser" role="dialog">
+    <div class="modal-dialog" style="width:50%;">
+
+        <div class="modal-content" style="none;">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add User</h4>
+            </div>
+            <br />
+            <div id="formUserCreate">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label mandatory">First Name <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control wajib" id="fNameAdd" placeholder="First Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label mandatory">Last Name <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input class="form-control wajib" id="lNameAdd" placeholder="Last Name" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Email <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control wajib" id="emailAdd" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Password <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control wajib" id="password" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Repeat Password <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control wajib" id="repeatPassword" placeholder="Repeat Password">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" onclick="Create_User()">Create</button>
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalDetailUser" role="dialog">
+    <div class="modal-dialog" style="width:50%;">
+        <div class="modal-content" style="none;">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detail User</h4>
+            </div>
+            <br />
+            <div id="formUserUpdate">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label mandatory">First Name <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control wajib" id="fNameDetail" placeholder="First Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label mandatory">Last Name <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input class="form-control wajib" id="lNameDetail" placeholder="Last Name" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Email <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control wajib" id="emailDetail" placeholder="Email">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" onclick="Update_User()">Update</button>
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalChPassword" role="dialog">
+    <div class="modal-dialog" style="width:50%;">
+        <div class="modal-content" style="none;">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Password</h4>
+            </div>
+            <br />
+            <div id="formUserChPassword">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Old Password <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control wajib" id="oPassword" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">New Password <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control wajib" id="nPassword" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-3 control-label">Repeat New Password <mandatory>*</mandatory></label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control wajib" id="rRepeatPassword" placeholder="Repeat Password">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" onclick="ChangePassword()">Update</button>
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    function add_user() {
+
+        flagCrud = "add";
+        form_user();
+    }
+
+    function detail_user() {
+
+        flagCrud = "detail";
+        form_user();
+    }
+
+    function Change_Password() {
+
+        flagCrud = "chPassword";
+        form_user();
+    }
+
+    function form_user() {
+
+        if (flagCrud == "add") {
+            $('#ModalAddUser').modal('show');
+            document.getElementById('fNameAdd').value = "";
+            document.getElementById('lNameAdd').value = "";
+            document.getElementById('emailAdd').value = "";
+            document.getElementById('password').value = "";
+            document.getElementById('repeatPassword').value = "";
+        } else if (flagCrud == "detail") {
+            $('#ModalDetailUser').modal('show');
+            Fill_Data();
+        } else {
+            $('#ModalChPassword').modal('show');
+            document.getElementById('oPassword').value = "";
+            document.getElementById('nPassword').value = "";
+            document.getElementById('rRepeatPassword').value = "";
+        }
+    }
+
+    function ChangePassword() {
+        var valid = form_validation("formUserChPassword", "wajib");
+        if (valid == false) {
+            return;
+        }
+
+        var DataUpdate = new FormData();
+        DataUpdate.append('id', $("#userId").val());
+        DataUpdate.append('oldPassword', $("#oPassword").val());
+        DataUpdate.append('newPassword', $("#nPassword").val());
+        DataUpdate.append('repeatPassword', $("#rRepeatPassword").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/User/ChangePassword',
+                type: 'POST',
+                data: DataUpdate,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            } else {
+                w2alert("Update data success !");
+                $('#Saving_Load').hide();
+            }
+            $('#ModalChPassword').modal('hide');
+        });
+
+    }
+
+    function Fill_Data() {
+        var Id = document.getElementById('userId').value;
+        $.ajax({
+            type: "GET",
+            url: "/User/getUser",
+            contentType: "application/json",
+            data: { id: Id },
+            success: function (data) {
+                $('#fNameDetail').val(data.firstName);
+                $('#lNameDetail').val(data.lastName);
+                $('#emailDetail').val(data.email);
+            }
+        });
+    }
+
+    function Update_User() {
+        var valid = form_validation("formUserUpdate", "wajib");
+        if (valid == false) {
+            return;
+        }
+        var DataUpdate = new FormData();
+        DataUpdate.append('id', $("#userId").val());
+        DataUpdate.append('firstName', $("#fNameDetail").val());
+        DataUpdate.append('lastName', $("#lNameDetail").val());
+        DataUpdate.append('email', $("#emailDetail").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/User/UpdateUser',
+                type: 'POST',
+                data: DataUpdate,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            } else {
+                w2alert("Update data success !");
+                $('#Saving_Load').hide();
+            }
+            $('#ModalDetailUser').modal('hide');
+        });
+    }
+
+    function Create_User() {
+        var valid = form_validation("formUserCreate", "wajib");
+        if (valid == false) {
+            return;
+        }
+
+        var DataSave = new FormData();
+        DataSave.append('firstName', $("#fNameAdd").val());
+        DataSave.append('lastName', $("#lNameAdd").val());
+        DataSave.append('email', $("#emailAdd").val());
+        DataSave.append('password', $("#password").val());
+        DataSave.append('repeatPassword', $("#repeatPassword").val());
+
+        $("#Saving_Load").show("fade", function () {
+            var Simpan = $.ajax({
+                url: URL + '/User/SaveUser',
+                type: 'POST',
+                data: DataSave,
+                dataType: "json",
+                cache: false,
+                async: false,
+                contentType: false,
+                processData: false,
+                error: function (request, status, error) {
+                    w2alert("Error, try again or contact our administrator please !");
+                    $('#Saving_Load').hide();
+                }
+
+            });
+
+            if (Simpan.responseJSON["Result"].toLocaleLowerCase().indexOf("error") != -1) {
+                $('#Saving_Load').hide();
+                w2alert(Simpan.responseJSON["Result"]);
+            } else {
+                w2alert("Update data success !");
+                $('#Saving_Load').hide();
+                
+            }
+            $('#ModalAddUser').modal('hide');
+        });
+    }
+</script>
